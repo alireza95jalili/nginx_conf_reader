@@ -1,0 +1,1 @@
+["upstream dsdkala_com { server 163.172.113.23:80;}", "upstream www_dsdkala_com { server 163.172.113.23:81;server 163.172.113.23:82;server 163.172.113.23:83;}"]
