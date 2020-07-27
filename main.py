@@ -105,7 +105,7 @@ def change_nginx_config(
         log(error, "error", "\t in change_nginx_config -> add http block")
     else:
         # log("Http Block Added", "info")
-        return True
+        # return True
 
     try:
         cnfm.conf2json(
