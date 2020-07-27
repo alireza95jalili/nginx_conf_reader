@@ -104,10 +104,12 @@ def change_nginx_config(
     except Exception as error:
         log(error, "error", "\t in change_nginx_config -> add http block")
     else:
-        log("Http Block Added", "info")
+        # log("Http Block Added", "info")
+        return True
 
     try:
-        cnfm.conf2json(config_dir, output_name=f"{json_config_dir}/{domain}.json")
+        cnfm.conf2json(
+            config_dir, output_name=f"{json_config_dir}/{domain}.json")
     except Exception as error:
         log("Cant Read Site Config or Save New Json Config", "error")
         log(error, "error")
@@ -149,7 +151,8 @@ def change_nginx_config(
                         return False
                     else:
                         try:
-                            os.rename(f"{config_dir}/{domain}.conf", config_dir)
+                            os.rename(
+                                f"{config_dir}/{domain}.conf", config_dir)
                         except Exception as error:
                             log("cant move new config to site-avilable", error)
                             log(error, "error")
@@ -189,7 +192,8 @@ def change_nginx_config(
                         try:
                             log(config_dir, "debug")
                             log(config_tmp_dir, "debug")
-                            os.rename(config_dir,f"{config_tmp_dir}/{domain}.conf" )
+                            os.rename(
+                                config_dir, f"{config_tmp_dir}/{domain}.conf")
                         except Exception as error:
                             log("cant move new config to site-avilable", "error")
                             log(error, "error")
@@ -280,5 +284,5 @@ def deleteHttpBlock(filename: str):
     except Exception as e:
         log(e, "error")
     else:
-        log("HTTP Block Rrmoved", "info")
+        # log("HTTP Block Rrmoved", "info")
         return True
