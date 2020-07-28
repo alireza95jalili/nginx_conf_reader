@@ -8,7 +8,7 @@ from logging.handlers import SysLogHandler
 
 def log(msg: str, lvl: str, extra=None):
     file_name = "[Main.py]"
-    print(f"{file_name}: [{lvl}]  {msg}")
+    print(f"{file_name}: [{lvl}]\t{msg}")
     return True
     logger = logging.getLogger()
     logger.addHandler(SysLogHandler("/dev/log"))

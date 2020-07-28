@@ -4,7 +4,7 @@ try:
     import subprocess
     import crossplane
     import os
-
+    from log import log
 except ImportError:
     print("One of required Package is not installed")
 
@@ -94,13 +94,18 @@ class conf_manipulator:
             config = json.load(f)
 
             if block == "upstream":
+                changed = 0
                 for elem in config["config"][0]["parsed"][0]["block"]:
                     if elem["directive"] == "upstream":
+
                         for each in elem["block"]:
                             if each["args"].__contains__(prev_value) and each['args'].__contains__(attribute):
-                                print("YES")
                                 each["args"].remove(prev_value)
                                 each["args"].append(new_value)
+                                changed += 1
+                if changed == 0:
+                    log("Did Not Find Any Mache Query", "Error")
+                    return False
 
             elif block == "server":
                 # config.parsed.block[].server.block.block
