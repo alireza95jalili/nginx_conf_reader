@@ -7,8 +7,8 @@ from logging.handlers import SysLogHandler
 
 
 def log(msg: str, lvl: str, extra=None):
-    file_name = "[Nginx-Config-Main]"
-    print(f"{file_name}: [{lvl}]\t {msg}")
+    file_name = "[Main.py]"
+    print(f"{file_name}: [{lvl}]  {msg}")
     return True
     logger = logging.getLogger()
     logger.addHandler(SysLogHandler("/dev/log"))
@@ -49,7 +49,8 @@ def bootstrap():
     except Exception as error:
         log(error, "error")
     else:
-        return True
+        pass
+        # return True
 
     try:
         os.mkdir("/etc/nginx/alirezajalili.ir.d/in_conf.d")
@@ -59,7 +60,8 @@ def bootstrap():
     except Exception as error:
         log(error, "error")
     else:
-        return True
+        pass
+        # return True
 
     try:
         os.mkdir("/etc/nginx/alirezajalili.ir.d/out.conf.d")
@@ -69,7 +71,8 @@ def bootstrap():
     except Exception as error:
         log(error, "error")
     else:
-        return True
+        pass
+        # return True
 
     try:
         os.mkdir("/etc/nginx/alirezajalili.ir.d/json_conf.d")
@@ -79,7 +82,8 @@ def bootstrap():
     except Exception as error:
         log(error, "error")
     else:
-        return True
+        pass
+        # return True
 
 
 json_config_dir = "/etc/nginx/alirezajalili.ir.d/json_conf.d"
@@ -93,8 +97,9 @@ def change_nginx_config(
     block_type: str,
     prev_value: list,
     new_value: list,
+    attribute: str,
     directive=None,
-    attribute=None,
+
 ):
     config_dir = f"/etc/nginx/conf.d/{domain}.conf"
     os.system(f"cp {config_dir} {in_config_dir}/{domain}.conf")
@@ -104,6 +109,7 @@ def change_nginx_config(
     except Exception as error:
         log(error, "error", "\t in change_nginx_config -> add http block")
     else:
+        pass
         # log("Http Block Added", "info")
         # return True
 
@@ -166,6 +172,7 @@ def change_nginx_config(
                     block="upstream",
                     prev_value=prev_value,
                     new_value=new_value,
+                    attribute=attribute,
                     jsonfile=f"{json_config_dir}/{domain}.json",
                 )
             except Exception as error:
@@ -190,8 +197,8 @@ def change_nginx_config(
                         return False
                     else:
                         try:
-                            log(config_dir, "debug")
-                            log(config_tmp_dir, "debug")
+                            # log(config_dir, "debug")
+                            # log(config_tmp_dir, "debug")
                             os.rename(
                                 config_dir, f"{config_tmp_dir}/{domain}.conf")
                         except Exception as error:
@@ -201,6 +208,7 @@ def change_nginx_config(
                         else:
                             new_file = f"{config_tmp_dir}/{domain}.conf"
                             deleteHttpBlock(new_file)
+                            log(f"Configs for {domain!r} Changed Sussessfully!", "info")
                             return True
         else:
             log("Cant Identify Block Type", "Error")
@@ -280,7 +288,9 @@ def deleteHttpBlock(filename: str):
                 if not line.strip("\n").__contains__("#HTTPBLOCK"):
                     f.write(line)
                 else:
-                    print(line)
+                    pass
+                    #log("Http Block Deleted")
+                    # print(line)
     except Exception as e:
         log(e, "error")
     else:

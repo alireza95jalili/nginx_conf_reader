@@ -24,7 +24,7 @@ class conf_manipulator:
             with open(name, "w+") as outfile:
                 json.dump(conf, outfile)
         except Exception as e:
-           
+
             print(e)
             return False
         else:
@@ -41,7 +41,8 @@ class conf_manipulator:
         """
         try:
             subprocess.call(
-                ["crossplane", "parse", "--no-catch","--include-comments","--single-file", "-o", output_name, nginx_config,]
+                ["crossplane", "parse", "--no-catch", "--include-comments",
+                    "--single-file", "-o", output_name, nginx_config, ]
             )
         except Exception as error:
             for e in error:
@@ -60,7 +61,8 @@ class conf_manipulator:
             nginx config file that will save in current dir or in desire dir (if you passed)
         """
         try:
-            subprocess.call(["crossplane", "build", "-t", "-f", "-d", "dir", jsonfile])
+            subprocess.call(["crossplane", "build", "-t",
+                             "-f", "-d", "dir", jsonfile])
         except Exception as error:
             print("EEEEEEEEEERRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOORRRRRRRRRRRRRR")
             print(error)
@@ -73,12 +75,10 @@ class conf_manipulator:
         block: str,
         prev_value: str,
         new_value: str,
+        attribute: str,
         directive=None,
-        attribute=None,
         jsonfile=None,
     ):
-
-
         """
         INPUT:
             block:str -> this is directive name.
@@ -90,15 +90,15 @@ class conf_manipulator:
         OUTPUT:
             a modified json file that will send to the 
         """
-        with open(jsonfile,'r') as f:
+        with open(jsonfile, 'r') as f:
             config = json.load(f)
 
             if block == "upstream":
                 for elem in config["config"][0]["parsed"][0]["block"]:
                     if elem["directive"] == "upstream":
                         for each in elem["block"]:
-                            # print(each["args"])
-                            if each["args"].__contains__(prev_value):
+                            if each["args"].__contains__(prev_value) and each['args'].__contains__(attribute):
+                                print("YES")
                                 each["args"].remove(prev_value)
                                 each["args"].append(new_value)
 
@@ -115,8 +115,7 @@ class conf_manipulator:
                                     ):
                                         elem["args"].remove(prev_value)
                                         elem["args"].append(new_value)
-        
- 
+
         if self.writer(conf=config, name=f"{jsonfile}"):
 
             # print(
@@ -129,7 +128,6 @@ class conf_manipulator:
         else:
             return False
 
-
     def add_subdomain(self, domain: str, sub_name, ip, ssl: bool):
         with open("nginx-config.json") as f:
             config = json.load(f)
@@ -139,7 +137,7 @@ class conf_manipulator:
                 "directive": "upstream",
                 "line": 7,
                 "args": [f"{sub_name}_{domain}"],
-                "block": [{"directive": "server", "line": 8, "args": [f"{ip}"],}],
+                "block": [{"directive": "server", "line": 8, "args": [f"{ip}"], }],
             },
             {
                 "directive": "server",
@@ -200,7 +198,7 @@ class conf_manipulator:
                             {
                                 "directive": "proxy_set_header",
                                 "line": 21,
-                                "args": ["X-Forwarded-Proto", "$scheme",],
+                                "args": ["X-Forwarded-Proto", "$scheme", ],
                             },
                             {
                                 "directive": "add_header",
@@ -252,7 +250,7 @@ class conf_manipulator:
                 "directive": "upstream",
                 "line": 7,
                 "args": [f"{sub_name}_{domain}"],
-                "block": [{"directive": "server", "line": 8, "args": [f"{ip}"],}],
+                "block": [{"directive": "server", "line": 8, "args": [f"{ip}"], }],
             },
             {
                 "directive": "server",
@@ -313,7 +311,7 @@ class conf_manipulator:
                             {
                                 "directive": "proxy_set_header",
                                 "line": 21,
-                                "args": ["X-Forwarded-Proto", "$scheme",],
+                                "args": ["X-Forwarded-Proto", "$scheme", ],
                             },
                             {
                                 "directive": "add_header",
@@ -356,7 +354,8 @@ class conf_manipulator:
                             },
                         ],
                     },
-                    {"directive": "listen", "line": 29, "args": ["443", "ssl"],},
+                    {"directive": "listen", "line": 29,
+                        "args": ["443", "ssl"], },
                     {
                         "directive": "ssl_certificate",
                         "line": 30,
@@ -391,7 +390,7 @@ class conf_manipulator:
                                     {
                                         "directive": "return",
                                         "line": 38,
-                                        "args": ["301", "https://$host$request_uri",],
+                                        "args": ["301", "https://$host$request_uri", ],
                                     }
                                 ],
                             },
@@ -400,8 +399,10 @@ class conf_manipulator:
                                 "line": 41,
                                 "args": [f"{sub_name}_{domain}"],
                             },
-                            {"directive": "listen", "line": 42, "args": ["80"]},
-                            {"directive": "return", "line": 43, "args": ["404"],},
+                            {"directive": "listen",
+                                "line": 42, "args": ["80"]},
+                            {"directive": "return",
+                                "line": 43, "args": ["404"], },
                         ],
                     },
                 ],

@@ -1,7 +1,9 @@
 import main
 import argparse
+import time
 
-parser = argparse.ArgumentParser(description="Nginx Config CLI By AlirezaJalili.ir")
+parser = argparse.ArgumentParser(
+    description="Nginx Config CLI By AlirezaJalili.ir")
 server = parser.add_argument_group()
 upstream = parser.add_argument_group()
 
@@ -30,8 +32,10 @@ server.add_argument(
 )
 
 parser.add_argument("-v", "--verbose", help="Show Every thing", metavar=("‌"))
-parser.add_argument("--new_subdomain", help="Add New Upstream Block", metavar=("‌"))
-parser.add_argument("--ssl", help="Add New Upstream Block",type=bool, metavar=("‌"))
+parser.add_argument("--new_subdomain",
+                    help="Add New Upstream Block", metavar=("‌"))
+parser.add_argument("--ssl", help="Add New Upstream Block",
+                    type=bool, metavar=("‌"))
 
 args = parser.parse_args()
 params = {
@@ -43,7 +47,7 @@ params = {
     "attribute": args.attribute,
     "config": f"/etc/nginx/conf.d/{args.domain}.conf",
 }
-
+start_time = time.time()
 main.bootstrap()
 if not args.block:
     exit("Block Argu is not passed")
@@ -71,15 +75,18 @@ if not args.new_subdomain:
     elif args.block.lower() == "upstream":
         main.change_nginx_config(
             domain=args.domain,
-            block_type="upstream", 
+            block_type="upstream",
             prev_value=args.prev_value,
             new_value=args.new_value,
+            attribute=args.attribute,
         )
+        main.log("Total Execution Time: {:.4f} Secounds :)".format(
+            time.time() - start_time), "info")
 
     else:
         exit("cant Identify Block Name")
 else:
-    main.add_subdomain(domain=args.domain,sub_name=args.new_subdomain,)
+    main.add_subdomain(domain=args.domain, sub_name=args.new_subdomain,)
 
 # answer = args.square**2
 # if args.verbose:
